@@ -7,7 +7,14 @@ using PlatformService.SyncDataServices.Http;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("PlatFormDB"));
+if(builder.Environment.IsDevelopment()){
+    Console.WriteLine("--> Using InMem DB");
+    builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("PlatformDB"));
+} else{
+    Console.WriteLine("--> Using SqlServer DB");
+    builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+}
+
 
 builder.Services.AddScoped<IPlatformRepo, PlatformRepo>();
 
@@ -33,7 +40,7 @@ if (app.Environment.IsDevelopment())
 //app.UseHttpsRedirection();
 
 app.UseAuthorization();
-PrepDb.PrepPoupulation(app);
+PrepDb.PrepPoupulation(app, app.Environment.IsProduction());
 app.MapControllers();
 
 app.Run();
