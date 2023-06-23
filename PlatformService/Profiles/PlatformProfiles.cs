@@ -8,5 +8,6 @@ public class PlatformProfiles : Profile
   {
     CreateMap<Platform, PlatFormReadDTO>();
     CreateMap<PlatformCreateDTO, Platform>();
+    CreateMap<PlatFormReadDTO, PlatformPublishDTO>();
   }
 }
