@@ -1,3 +1,4 @@
+using CommandsService.AsyncDataServices;
 using CommandsService.Data;
 using CommandsService.EventProcessing;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHostedService<MessageBusSubscriber>();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
