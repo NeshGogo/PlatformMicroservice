@@ -8,10 +8,13 @@ using PlatformService.SyncDataServices.Http;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-if(builder.Environment.IsDevelopment()){
+if (builder.Environment.IsDevelopment())
+{
     Console.WriteLine("--> Using InMem DB");
     builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("PlatformDB"));
-} else{
+}
+else
+{
     Console.WriteLine("--> Using SqlServer DB");
     builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 }
@@ -46,4 +49,6 @@ app.UseAuthorization();
 PrepDb.PrepPoupulation(app, app.Environment.IsProduction());
 app.MapControllers();
 app.MapGrpcService<GrpcPlatformService>();
+app.MapGet("/protos/platforms.proto", async context =>
+    await context.Response.WriteAsync(File.ReadAllText("Protos/platforms.proto")));
 app.Run();
